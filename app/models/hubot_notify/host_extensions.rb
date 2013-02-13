@@ -7,26 +7,29 @@ module HubotNotify
 	  included do
       require 'net/http'
 
-		  #execute standard callbacks
-		  #after_create :do_this
-		  #after_destroy :do_that
+		#execute standard callbacks
+		after_create :hubot_after_create
 
-		  #execute custom hooks
-		  after_build :do_something_special_after_build
-      before_provision :do_this_before_provision
+		#execute custom hooks
+		after_build :hubot_after_build
+		before_provision :hubot_before_provision
 
-		  def do_something_special_after_build
-		    logger.info "Logging build started to IRC"
+		def hubot_after_create
+		  logger.info "Host created #{@host.name}, #{@host.ip}"
+		end
+
+		  def hubot_after_build
+		    logger.info "Host build started: #{@host.name}"
         # This is run when Build button is clicked - so doesn't fire on New Host
-        uri = URI('http://ircbot:8080/hubot/irc')
-        Net::HTTP.post_form(uri, 'message' => "Host build started: #{@host.name}")
+#        uri = URI('http://ircbot:8080/hubot/irc')
+#        Net::HTTP.post_form(uri, 'message' => "Host build started: #{@host.name}")
 		  end
 
-		  def do_this_before_provision
-		    logger.info "Logging build complete to IRC"
+		  def hubot_before_provision
+		    logger.info "Host build complete: #{@host.name}"
         # This actually seems to get run at the end...
-        uri = URI('http://ircbot:8080/hubot/irc')
-        Net::HTTP.post_form(uri, 'message' => "Host build complete: #{@host.name}")
+#        uri = URI('http://ircbot:8080/hubot/irc')
+#        Net::HTTP.post_form(uri, 'message' => "Host build complete: #{@host.name}")
 		  end
 
 		end
